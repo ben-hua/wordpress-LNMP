@@ -8,5 +8,5 @@
       - common
       - mysql
       - nginx
-      - php-fpm
+      - php
       - wordpress
