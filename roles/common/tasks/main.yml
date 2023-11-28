@@ -1,0 +1,10 @@
+---
+- name: Reload ansible_facts
+  ansible.builtin.setup:
+
+- name: Intall the EPEL repository
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+    enablerepo: epel
+    update_cache: true

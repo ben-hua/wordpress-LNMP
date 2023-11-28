@@ -1,0 +1,34 @@
+---
+- name: Install php-fpm and deps
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "@php:8.0"
+    - php-curl
+    - php-dom
+    - php-exif
+    - php-fileinfo
+    - php-fpm
+    - php-gd
+    - php-hash
+    - php-json
+    - php-mbstring
+    - php-mysqli
+    - php-openssl
+    - php-pcre
+    - php-xml
+    - libsodium
+
+- name: Disable default pool
+  ansible.builtin.command: mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.disabled creates=/etc/php-fpm.d/www.disabled
+  notify: Restart php-fpm
+
+- name: Copy php-fpm configuration
+  ansible.builtin.template:
+    src: wordpress.conf
+    dest: /etc/php-fpm.d/
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart php-fpm

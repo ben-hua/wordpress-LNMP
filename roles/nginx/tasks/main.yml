@@ -1,0 +1,23 @@
+---
+- name: Install nginx
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+
+- name: Copy nginx configuration default.confg
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    group: root
+    owner: root
+    mode: "0644"
+  notify: Restart nginx
+
+- name: Copy nginx configuration for wordpress
+  ansible.builtin.template:
+    src: wordpress.conf
+    dest: /etc/nginx/conf.d/wordpress.conf
+    group: root
+    owner: root
+    mode: "0644"
+  notify: Restart nginx
