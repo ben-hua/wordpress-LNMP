@@ -23,7 +23,7 @@
 2. 添加SSH秘钥：
 
       ```bash
-      eval "$(ssh-agent -s)"
+      eval "$(ssh-agent -s)"1
       ssh-add ~/.ssh/private-key-file
       ```
 
