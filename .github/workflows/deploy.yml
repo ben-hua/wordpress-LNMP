@@ -1,0 +1,30 @@
+name: deploy
+on:
+    push:
+        tags:
+            - "v*"
+jobs:
+    deploy_wordpress:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Run playbook
+              uses: dawidd6/action-ansible-playbook@v2
+              with:
+                  # Required, playbook filepath
+                  playbook: site.yml
+                  # Optional, directory where playbooks live
+                  directory: ./
+                  # Optional, SSH private key
+                  key: ${{secrets.SSH_PRIVATE_KEY}}
+                  # Optional, literal inventory file contents
+                  inventory: |
+                      [wordpress-server]
+                      ${{secrets.WORDPRESS_SERVER_IP}}
+                  # Optional, SSH known hosts file content
+                  known_hosts: |
+                      ${{secrets.KNOW_HOSTS_FOR_WORDPRESS_SERVER}}
+                  # Optional, galaxy requirements filepath
+                  requirements: requirements.yml
