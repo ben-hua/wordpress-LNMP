@@ -1,74 +1,74 @@
-# 使用Ansible自动部署LNMP
+# Use Ansible to automatically install LNMP
 
-使用Ansible自动化部署 MySQL-8, WordPress-6.4.1, Nginx-1.14, 和 PHP-8
+Use Ansible to automatically install: MySQL-8, WordPress-6.4.1, Nginx-1.14, and PHP-8
 
 ## Requires
 
-### 管理端
+### Management side
 
 - Ansible 2.16
 
-### 被控制的服务器
+### Controlled server
 
-- 操作系统：Centos stream/RHEL 8.x
-- Python 3.0 (默认已安装) 验证是否安装： `python3 -V`
-- 具有root权限的用户，且已添加public-key
+- Operating system: Centos stream/RHEL 8.x
+- Python 3.0 (installed by default) Verify installation: `python3 -V`
+- User with root privileges and public-key has been added
 
-## 如何运行
+## How to run
 
-### a. 管理端本地执行
+### a. Local execution on the management side
 
-1. 配置服务器地址到 **inventory.ini**； 配置用户到 **site.yml** 中的 **remote_user**
+1. Configure the server address to **inventory.ini**; configure the user to **remote_user** in **site.yml**
 
-2. 添加SSH秘钥：
-      秘钥不要添加passphrase
+2. Add SSH key:
+       Do not add passphrase to the secret key
 
-      ```bash
-      eval "$(ssh-agent -s)"
-      ssh-add ~/.ssh/private-key-file
-      ```
+       ```bash
+       eval "$(ssh-agent -s)"
+       ssh-add ~/.ssh/private-key-file
+       ```
 
-3. 一键部署：
+3. One-click deployment:
 
-      ```bash
-      ansible-playbook -i inventory.ini site.yml
-      ```
+       ```bash
+       ansible-playbook -i inventory.ini site.yml
+       ```
 
-4. 执行成功后，就可以访问你的wordpress了
+4. After successful execution, you can access your wordpress
 
-### b. 或者GitHub Action执行
+### b. Or GitHub Action execution
 
- 1. 在仓库Actions secrets and variables中添加
-      + **SSH_PRIVATE_KEY**: 你的SSH私钥
-      + **WORDPRESS_SERVER_IP**: 你的服务器IP
-      + **KNOW_HOSTS_FOR_WORDPRESS_SERVER**: know_hosts文件内容，[获取方式参考](#参考)
+  1. Add in warehouse Actions secrets and variables
+       + **SSH_PRIVATE_KEY**: your SSH private key
+       + **WORDPRESS_SERVER_IP**: your server IP
+       + **KNOW_HOSTS_FOR_WORDPRESS_SERVER**: know_hosts file content, [reference for obtaining method](#reference)
 
- 2. Git添加一个tag: **v0.0.1** 并提交，脚本会自动执行
-      执行规则参见 .github/workflows/deploy.yml
+  2. Add a tag to Git: **v0.0.1** and submit, the script will be executed automatically
+       For execution rules, see .github/workflows/deploy.yml
 
- 3. 执行成功后，就可以访问你的wordpress了
+  3. After successful execution, you can access your wordpress
 
-## 参考
+## refer to
 
-  1. Ansible playbook 参照：[ansible-examples/wordpress-nginx](https://github.com/ansible/ansible-examples/tree/master/wordpress-nginx)
+   1. Ansible playbook reference: [ansible-examples/wordpress-nginx](https://github.com/ansible/ansible-examples/tree/master/wordpress-nginx)
 
-      修改点:
+       Modification points:
 
-      + 删除了 selinux，iptables，firewall 相关配置
-      + PHP 升级到8.0，调整 PHP-FPM 所需的模块[参照文档](https://cloud.tencent.com/document/product/213/49304)
-      + wordpress 升级到6.4.1，删除自动更新等配置
-      + ansible-lint 问题修改
+       + Removed selinux, iptables, firewall related configurations
+       + Upgrade PHP to 8.0 and adjust the modules required for PHP-FPM [Refer to the document](https://cloud.tencent.com/document/product/213/49304)
+       + Upgrade wordpress to 6.4.1, delete automatic updates and other configurations
+       + ansible-lint problem modification
 
-  2. [Ansible: **managed-node-requirements**](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#managed-node-requirements)
+   2. [Ansible: **managed-node-requirements**](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#managed-node-requirements)
 
-  3. [Ansible collections: **builtin**](<https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html>)
+   3. [Ansible collections: **builtin**](<https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html>)
 
-  4. [How to build your inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html#how-to-build-your-inventory)
+   4. [How to build your inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html#how-to-build-your-inventory)
 
-  5. know_hosts 文件内容获取方式：
+   5. How to obtain the contents of the know_hosts file:
 
-      ```bash
-            eval "$(ssh-agent -s)"
-            ssh-add ~/.ssh/private-key-file
-            ssh username@wordpress_server_ip -o UserKnownHostsFile=.ansible_known_hosts
-      ```
+            ```bash
+                  eval "$(ssh-agent -s)"
+                  ssh-add ~/.ssh/private-key-file
+                  ssh username@wordpress_server_ip -o UserKnownHostsFile=.ansible_known_hosts
+            ```
